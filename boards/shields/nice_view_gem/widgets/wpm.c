@@ -4,6 +4,8 @@
 #include <zephyr/kernel.h>
 #include "wpm.h"
 #include "../assets/custom_fonts.h"
+// Include the canvas compatibility layer to abstract LVGL API changes
+#include "../lvgl_compat_canvas.h"
 
 LV_IMAGE_DECLARE(gauge);
 LV_IMAGE_DECLARE(grid);
@@ -51,7 +53,8 @@ static void draw_needle(lv_obj_t *canvas, const struct status_state *state) {
     int needleEndY = centerY + (int)(radius * sin(angleRad));
 
     lv_point_t points[2] = {{needleStartX, needleStartY}, {needleEndX, needleEndY}};
-    lv_canvas_draw_line(canvas, points, 2, &line_dsc);
+    // Use compat wrapper for canvas draw line (handles LVGL v8/v9 renames)
+    nice_canvas_draw_line(canvas, points, 2, &line_dsc);
 }
 
 
@@ -107,7 +110,8 @@ static void draw_graph(lv_obj_t *canvas, const struct status_state *state) {
     }
 #endif
 
-    lv_canvas_draw_line(canvas, points, 10, &line_dsc);
+    // Use compat wrapper for canvas draw line (handles LVGL v8/v9 renames)
+    nice_canvas_draw_line(canvas, points, 10, &line_dsc);
 }
 
 
