@@ -4,6 +4,31 @@
 
 #include <lvgl.h>
 
+/*
+ * If LVGL v9+ is in use, alias the old lv_canvas_* function names to
+ * their new canvas_* counterparts. This ensures any unmodified code
+ * that still references the v8 APIs will resolve correctly, and also
+ * allows our own wrappers to fall back safely when version macros are
+ * not available. These aliases are no-ops on older LVGL releases.
+ */
+#if defined(LV_VERSION_MAJOR) && (LV_VERSION_MAJOR >= 9)
+#ifndef lv_canvas_draw_line
+#define lv_canvas_draw_line canvas_draw_line
+#endif
+#ifndef lv_canvas_draw_rect
+#define lv_canvas_draw_rect canvas_draw_rect
+#endif
+#ifndef lv_canvas_draw_arc
+#define lv_canvas_draw_arc canvas_draw_arc
+#endif
+#ifndef lv_canvas_draw_text
+#define lv_canvas_draw_text canvas_draw_text
+#endif
+#ifndef lv_canvas_fill_bg
+#define lv_canvas_fill_bg canvas_fill_bg
+#endif
+#endif /* LV_VERSION_MAJOR >= 9 */
+
 /* Draw a line on a canvas.  In LVGL 9 the prefix “lv_” was dropped.  */
 static inline void nice_canvas_draw_line(lv_obj_t *canvas,
                                          const lv_point_t *points,
